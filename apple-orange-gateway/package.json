@@ -1,0 +1,17 @@
+{
+  "name": "apple-orange-gateway",
+  "version": "1.0.0",
+  "description": "Gateway Service",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "http-proxy-middleware": "^3.0.3"
+  }
+}
