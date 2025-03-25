@@ -46,7 +46,6 @@ apple-orange-web-app/.next/
 apple-orange-web-app/out/
 
 # Database dumps or backup files
-*.sql
 *.dump
 
 # Miscellaneous system files
