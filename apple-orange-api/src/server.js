@@ -1,8 +1,10 @@
 // src/server.js
 const express = require('express');
 const runMigrations = require('./migrate');
-const blogRoutes = require('./routes/blogRoutes');
+const comparisonRoutes = require('./routes/comparisonRoutes');
 const productRoutes = require('./routes/productRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
+const homepageController = require('./controllers/homepageController');
 require('dotenv').config();
 
 const app = express();
@@ -11,10 +13,10 @@ app.use(express.json());
 (async () => {
     await runMigrations();
 
-    app.use('/blogs', blogRoutes);
+    app.use('/comparisons', comparisonRoutes);
     app.use('/products', productRoutes);
-
-    app.get('/', (req, res) => res.json({ status: 'API running' }));
+    app.use('/categories', categoryRoutes);
+    app.get('/', homepageController.getHomePage);
 
     const PORT = process.env.PORT || 4000;
     app.listen(PORT, () => {

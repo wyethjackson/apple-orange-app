@@ -1,0 +1,24 @@
+{
+    "slug": "kitchen",
+    "category": {
+        "title": "Kitchen Appliances",
+        "overview": "Explore appliances that enhance your kitchen experience.",
+        "leafCategories": [
+            {
+                "slug": "kitchen-blenders",
+                "name": "Blenders",
+                "breadcrumbs": [
+                    "Kitchen Appliances"
+                ]
+            },
+            {
+                "slug": "kitchen-air-fryers",
+                "name": "Air Fryers",
+                "breadcrumbs": [
+                    "Kitchen Appliances"
+                ]
+            }
+        ],
+        "products": []
+    }
+}
