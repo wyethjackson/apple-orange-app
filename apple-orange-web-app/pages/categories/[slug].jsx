@@ -9,10 +9,11 @@ import fetch from 'node-fetch';
 import Category from '@/components/Category';
 
 export default function CategoryDetails({ data, slug }) {
-    const { category, allCategories } = data;
+    console.log(data);
+    const { category } = data;
     if (!category) {
         return (
-            <Layout categories={allCategories}>
+            <Layout {...data}>
               <div className="container mx-auto p-4">
                 <h1 className="text-3xl font-semibold mb-4">Category Not Found</h1>
                 <p>No category available for "{slug}".</p>
@@ -22,7 +23,7 @@ export default function CategoryDetails({ data, slug }) {
     }
 
     return (
-        <Layout categories={allCategories}>
+        <Layout {...data}>
             {
                 category.is_leaf ? (
                     <LeafCategory category={category} />
@@ -65,17 +66,29 @@ export async function getServerSideProps(context) {
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/categories/${slug}`);
 
         if (!res.ok) {
-            return { props: { data: null, slug } };
+                return {
+                    redirect: {
+                        destination: '/',
+                        permanent: false,
+                    },
+                };
         }
 
         const data = await res.json();
-        // const data = testCategoryData;
-        // const data = testCategoryWithChildData;
+        if (!data || !data.category) {
+            return {
+                redirect: {
+                    destination: '/',
+                    permanent: false,
+                },
+            };
+        }
 
         const {category} = data;
-        const image_urls = await Promise.all((category?.products || []).map(async (product) => (
-            fetch(`${process.env.NEXT_PUBLIC_R2_ASSETS}/${product.image_file}`)
-        )));
+        const image_urls = await Promise.all((category?.products || category?.leafCategoryProducts || []).map(async (product) => {
+            console.log(`${process.env.NEXT_PUBLIC_R2_ASSETS}/${product.image_file}`);
+            return fetch(`${process.env.NEXT_PUBLIC_R2_ASSETS}/${product.image_file}`)
+    }));
         const imageBuffers = await Promise.all(image_urls.map(async (image_response) => {
             return image_response.arrayBuffer();
         }));
@@ -89,10 +102,9 @@ export async function getServerSideProps(context) {
             const base64Image = image.buffer.toString('base64');
             const contentType = image.contentType;
             const imageSrc = `data:${contentType};base64,${base64Image}`;
-            console.log("IMAGE SRC (first 100 chars):", imageSrc.substring(0, 100));
             return {
               imageSrc,
-              ...((category?.products || [])?.[index] || {})
+                ...((category?.products || category?.leafCategoryProducts ||[])?.[index] || {})
             }
         });
         const newData = {
@@ -109,6 +121,11 @@ export async function getServerSideProps(context) {
         };
     } catch (error) {
         console.error("Error fetching comparison:", error);
-        return { props: { data: {}, slug } };
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false,
+            },
+        };
     }
 }

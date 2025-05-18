@@ -114,26 +114,6 @@ ALTER TABLE products
     REFERENCES categories(id)
     ON DELETE SET NULL;
 
-
--- 4. Insert root categories
-INSERT INTO categories (name, slug, path) VALUES 
-  ('Kitchen', 'kitchen', 'Kitchen'),
-  ('Bathroom', 'bathroom', 'Bathroom'),
-  ('Health and Wellness', 'health-and-wellness', 'HealthAndWellness');
-
 -- 5. Insert sub-categories for the Kitchen section
 INSERT INTO categories (name, slug, path) VALUES 
-  ('High-End Appliances', 'kitchen-high-end-appliances', 'Kitchen.High-End-Appliances'),
-  ('Premium Cookware', 'kitchen-premium-cookware', 'Kitchen.Premium-Cookware'),
-  ('Countertop Appliances', 'kitchen-countertop-appliances', 'Kitchen.Countertop-Appliances');
-
--- 6. Insert sub-categories for the Bathroom section
-INSERT INTO categories (name, slug, path) VALUES 
-  ('Luxury Fixtures', 'bathroom-luxury-fixtures', 'Bathroom.Luxury-Fixtures'),
-  ('Premium Shower Systems', 'bathroom-premium-shower-systems', 'Bathroom.Premium-Shower-Systems');
-
--- 7. Insert sub-categories for the Health and Wellness section
-INSERT INTO categories (name, slug, path) VALUES 
-  ('Massage Chairs', 'health-and-wellness-massage-chairs', 'HealthAndWellness.Massage-Chairs'),
-  ('Saunas', 'health-and-wellness-saunas', 'HealthAndWellness.Saunas'),
-  ('Fitness Equipment', 'health-and-wellness-fitness-equipment', 'HealthAndWellness.Fitness-Equipment');
+  ('Home Appliances', 'home-appliances', 'Home-Appliances');

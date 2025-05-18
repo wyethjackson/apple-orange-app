@@ -46,11 +46,25 @@ const runMigrations = async () => {
             dir: 'migrations',
             direction: 'up',
             migrationsTable: 'pgmigrations',
-            log: () => { },
+            log: (message) => {
+                if (typeof message === 'string' && message.includes('migrating')) {
+                    const match = message.match(/migrating\s(.+)/);
+                    if (match) {
+                        const filename = match[1];
+                        console.log(`🚀 Running migration: ${filename}`);
+                    }
+                }
+            },
         });
         console.log('✅ Database migrations completed.');
     } catch (error) {
-        console.error('❌ Migration failed:', error);
+        console.error('❌ Migration failed. Check migration file and SQL:');
+        if (error.message) {
+            console.error(`🛑 ${error.message}`);
+        }
+        if (error.stack) {
+            console.error(error.stack);
+        }
         process.exit(1);
     }
 };

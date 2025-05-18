@@ -15,7 +15,7 @@ const fetchAllCategories = async () => {
         // Try to get cached categories.
         const cachedCategories = await getCache(cacheKey);
         if (cachedCategories) {
-            return res.json(cachedCategories);
+            return cachedCategories;
         }
 
         // Query the database if cache is empty.
@@ -72,31 +72,31 @@ const getHomePage = async (req, res) => {
         // Try to get cached categories.
         const cachedData = await getCache(cacheKey);
         if (cachedData) {
-            return res.json(cachedCategories);
+            return res.json(cachedData);
         }
         const allCategories = await fetchAllCategories();
         const leafCategoriesResult = await pool.query(`
-      SELECT 
+        SELECT
+  p.name as productName,
+  p.link,
+  p.description,
+  p.subtitle,
+  p.image_file,
+  p.pro_text,
+  p.con_text,
+  p.price,
         c.slug,
-        c.name,
-        (
-          SELECT array_agg(a.name ORDER BY nlevel(a.path))
-          FROM categories a
-          WHERE a.path @> c.path
-            AND a.path != c.path
-        ) AS breadcrumbs
-      FROM categories c
-      WHERE NOT EXISTS (
-        SELECT 1 FROM categories sub
-        WHERE sub.path <@ c.path
-          AND nlevel(sub.path) = nlevel(c.path) + 1
-      )
-      ORDER BY RANDOM()
-      LIMIT 10;
+  c.name as cat_title,
+  c.path
+  FROM products AS p
+  INNER JOIN categories c ON p.category_id = c.id AND p.is_featured = TRUE
     `);
+
+        const leafCategoryProducts = leafCategoriesResult.rows;
     const responseData = {
-        leafCategories: leafCategoriesResult.rows,
+        leafCategoryProducts,
         allCategories,
+        heroImage: "hero_image.png"
     }
         await setCache(cacheKey, responseData, 120);
         return res.json(responseData);

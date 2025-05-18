@@ -14,7 +14,7 @@ export default function LeafCategory({ category }) {
                                     <span className="hover:underline cursor-pointer">{crumb.name}</span>
                                 </Link>
                                 {index < category?.breadcrumb.length - 1 && (
-                                    <span className="mx-1">&gt;</span>
+                                    <span>&gt;</span>
                                 )}
                             </React.Fragment>
                         ))}

@@ -95,7 +95,8 @@ const getBySlug = async (req, res) => {
 
         const category = catResult.rows[0];
         if(!category.is_leaf) {
-            return res.json(getNavCategory(category, cacheKey));
+            const navCat = await getNavCategory(category, cacheKey);
+            return res.json(navCat);
         }
         // 2. Fetch breadcrumb data using the LTREE path.
         // This query returns all categories whose path is an ancestor of the current category's path (including itself),
@@ -120,6 +121,7 @@ const getBySlug = async (req, res) => {
         const responseData = {
             category:{
                 slug: category.slug,
+                name: category.name,
                 title: category.title,
                 overview: category.overview,
                 conclusion: category.conclusion,
@@ -149,39 +151,43 @@ const getBySlug = async (req, res) => {
 const getNavCategory = async (category, cacheKey) => {
     const leafCategoriesResult = await pool.query(`
         SELECT
-  child.slug,
-  child.name,
-  child.path,
-  ARRAY(
-    SELECT name FROM categories AS ancestor
-    WHERE ancestor.path @> child.path
-    AND ancestor.path != child.path
-    ORDER BY nlevel(ancestor.path)
-  ) AS breadcrumbs
-FROM categories AS child
-WHERE child.path <@ (
+  p.name,
+  p.link,
+  p.description,
+  p.subtitle,
+  p.pro_text,
+  p.con_text,
+  p.price,
+  p.image_file,
+        child.slug,
+  child.name as cat_title,
+  child.path
+  FROM categories AS child
+  LEFT JOIN products p ON p.category_id = child.id AND p.is_featured = TRUE
+  WHERE child.path <@ (
   SELECT path FROM categories WHERE slug = $1
-)
-AND NOT EXISTS (
-  SELECT 1 FROM categories AS subchild
-  WHERE subchild.path <@ child.path
-  AND nlevel(subchild.path) = nlevel(child.path) + 1
-)
+  ) 
+  AND NOT EXISTS (
+    SELECT 1 FROM categories AS subchild
+    WHERE subchild.path <@ child.path
+    AND nlevel(subchild.path) = nlevel(child.path) + 1
+  )
     `, [category.slug]);
 
-    const leafCategories = leafCategoriesResult.rows;
+    const leafCategoryProducts = leafCategoriesResult.rows;
     const allCategories = await fetchAllCategories();
     const responseData = {
         category: {
             slug: category.slug,
-            title: category.title,
+            title: category.name,
             overview: category.overview,
             conclusion: category.conclusion,
             is_leaf: category.is_leaf,
-            leafCategories,
+            leafCategoryProducts,
         },
         allCategories,
     };
+    console.log(responseData.category);
     await setCache(cacheKey, responseData, 120);
     return responseData;
 }
