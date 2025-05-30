@@ -58,7 +58,7 @@ export default function ProductCard({ featuredProduct }) {
                                 ))}
                             </ul>
                         </div>
-                        <div className={`flex - 1 min-w-0 bg-red-50 border-l-4 border-red-400 p-3 rounded h-40`}>
+                        <div className={`flex-1 min-w-0 bg-red-50 border-l-4 border-red-400 p-3 rounded h-40`}>
                             <h4 className="text-red-700 font-semibold">❌ Cons</h4>
                             {/* <p className="text-sm text-gray-700">{featuredProduct.con_text}</p> */}
                             <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
