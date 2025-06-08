@@ -251,10 +251,15 @@ UPDATE products
 SET category_id = (SELECT id FROM categories WHERE slug = 'soundbars')
 WHERE product_grouping_id = (SELECT id FROM product_groupings WHERE slug = 'top-soundbars');
 
---------------------------------------------------------------------------------
--- 1. Insert New Leaf Category for Standard Smartwatches
-INSERT INTO categories (name, slug, path)
-VALUES ('Standard Smartwatches', 'wearables-standard-smartwatches', 'Wearables.Standard-Smartwatches');
+INSERT INTO categories (title, overview, conclusion, slug, name, path)
+VALUES (
+  'Best Affordable Smartwatches for Fitness and Lifestyle',
+  'You no longer need to spend a fortune to get a reliable, feature-packed smartwatch. Modern options deliver solid fitness tracking, stylish looks, and essential notifications at affordable prices.',
+  'The Apple Watch SE (2nd Gen) is the best overall choice for iPhone users. Samsung Galaxy Watch 6 offers the best experience for Android fans, while Garmin Venu Sq 2 and Fitbit Versa 4 are ideal for fitness-first users.',
+  'best-standard-smartwatches',
+  'Standard Smartwatches',
+  'Wearables.Standard-Smartwatches'
+);
 
 --------------------------------------------------------------------------------
 -- 2. Insert New Product Grouping for Smartwatches
@@ -407,16 +412,6 @@ VALUES (
   'The Apple Watch SE (2nd Gen) is the best overall choice for iPhone users. Samsung Galaxy Watch 6 offers the best experience for Android fans, while Garmin Venu Sq 2 and Fitbit Versa 4 are ideal for fitness-first users.',
   'best-standard-smartwatches',
   (SELECT id FROM product_groupings WHERE slug = 'best-standard-smartwatches')
-);
-
-INSERT INTO categories (title, overview, conclusion, slug, name, path)
-VALUES (
-  'Best Affordable Smartwatches for Fitness and Lifestyle',
-  'You no longer need to spend a fortune to get a reliable, feature-packed smartwatch. Modern options deliver solid fitness tracking, stylish looks, and essential notifications at affordable prices.',
-  'The Apple Watch SE (2nd Gen) is the best overall choice for iPhone users. Samsung Galaxy Watch 6 offers the best experience for Android fans, while Garmin Venu Sq 2 and Fitbit Versa 4 are ideal for fitness-first users.',
-  'best-standard-smartwatches',
-  'Standard Smartwatches',
-  'Wearables.Standard-Smartwatches'
 );
 
 INSERT INTO product_comparisons (title, overview, conclusion, slug, product_grouping_id)

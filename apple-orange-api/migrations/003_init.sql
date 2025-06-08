@@ -1,5 +1,3 @@
-
-
 -- Insert sub-categories under Electronics
 INSERT INTO categories (name, slug, path)
 VALUES
