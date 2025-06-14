@@ -13,6 +13,20 @@ export default function Layout(props) {
           <meta name="description" content={props?.category?.overview || "Find the best product for your needs through curated, comparison-based reviews."} />
           <meta name="robots" content="index, follow" />
           <link rel="canonical" href={`https://www.appleorange.com`} />
+          <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=AW-862092085"
+          ></script>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'AW-862092085');
+            `,
+            }}
+          />
           {(props?.category?.products || props?.leafCategoryProducts || []).map((product) => (
             <script
               key={product.slug}
