@@ -4,6 +4,12 @@ export default function ProductCard({ featuredProduct }) {
         if (!text) return [];
         return text.split(",").map((item) => item.trim()).filter((item) => item.length).map((item) => item.charAt(0).toUpperCase() + item.slice(1));
     }
+
+    const handleClick = (e, link) => {
+        e.preventDefault();
+        window.gtag_report_conversion(link);
+    };
+
     return (
         <div className="relative border-2 border-orange-500 rounded-lg p-4 mt-4 mb-4 bg-white shadow-md max-w-3xl flex flex-col justify-between">
 
@@ -88,7 +94,7 @@ export default function ProductCard({ featuredProduct }) {
                             </div>
                     </div> */}
                     <div className="mt-auto">
-                        <a href={featuredProduct.link} target="_blank" rel="noopener noreferrer">
+                        <a href={featuredProduct.link} target="_blank" rel="noopener noreferrer" onClick={(e) => handleClick(e, product.link)}>
                             <span target="_blank" rel="noopener noreferrer">
                                 <button className="bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-600 hover:to-orange-500 text-white font-semibold py-2 px-6 rounded shadow transition-colors duration-200">
                                     ${!Number.isNaN(featuredProduct.price) ? Number(featuredProduct.price).toFixed(2) : 'N/A'} – View on Amazon
